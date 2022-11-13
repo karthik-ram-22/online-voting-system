@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <title>Login / Sign Up Form</title>
+    
+    <link rel="stylesheet" href="../static/signup.css">
+</head>
+<body class="card">
+    <div class="container">
+        <form name="sform" class="form" id="signup" onsubmit="return signup()">
+            <h1 class="form__title" style="color:black;">Create Account</h1>
+            <div class="form__message form__message--error"></div>
+            <div class="form__input-group">
+                <input type="text" id="aadhar" class="form__input" autocomplete="off" autofocus placeholder="12-digit Aadhar Number">
+                <div class="form__input-error-message" id="aadharError"></div>
+            </div>
+            <div class="form__input-group">
+                <input type="text" id="mobile" class="form__input" autocomplete="off" autofocus placeholder="Username or phone number">
+                <div class="form__input-error-message" id="mobileError"></div>
+            </div>
+            <div class="form__input-group">
+                <input type="text" id="mail" class="form__input" autocomplete="off" autofocus placeholder="Email Address">
+                <div class="form__input-error-message" id="mailError"></div>
+            </div>
+            <div class="form__input-group">
+                <input type="password" id="passwd1" class="form__input" autofocus placeholder="Password">
+                <div class="form__input-error-message" id="passwdErr1"></div>
+            </div>
+            <div class="form__input-group">
+                <input type="password" id="passwd2" class="form__input" autofocus placeholder="Confirm password">
+                <div class="form__input-error-message" id="passwdErr2"></div>
+            </div>
+            <p <label style="color:black">Upload your image:</label> <input name="file-upload-field" type="file" id="file5" class="file-upload-field" placeholder="Give Photo"></p>
+            <button class="form__button" type="submit">Continue</button>
+            <p class="form__text">
+                <a class="form__link" href="./signin" id="linkLogin">Already have an account? Sign in</a>
+            </p>
+        </form>
+    </div>
+    <script src="../static/script2.js"></script>
+</body>

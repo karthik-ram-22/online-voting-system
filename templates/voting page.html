@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Voting page</title>
+        <link href="../static/votingstyle.css" rel="stylesheet">
+    </head>
+    <body>
+        <section class="radio-section">
+            <form class="radio-list" name="vform" onsubmit="return vote()" method="post">
+                <h2>Vote Here</h2><br>
+                <div class="form__message form__message--error" id="error"></div>
+                <div class="radio-item">
+                    <input type="radio" name="radio" id="radio1" value="TRS Party">
+                    <label for="radio1">TRS Party</label>
+                </div>
+                <div class="radio-item">
+                    <input type="radio" name="radio" id="radio2" value="TDP Party">
+                    <label for="radio2">TDP Party</label>
+                </div>
+                <div class="radio-item">
+                    <input type="radio" name="radio" id="radio3" value="YSRCP">
+                    <label for="radio3">YSRCP</label>
+                </div>
+                <div class="radio-item">
+                    <input type="radio" name="radio" id="radio4" value="Janasena Party">
+                    <label for="radio4">Janasena Party</label>
+                </div>
+                <div class="radio-item">
+                    <input type="radio" name="radio" id="radio5" value="Congress">
+                    <label for="radio5">Congress</label>
+                </div>
+                <button class="sub-button" type="submit">Submit Vote</button>
+                
+            </form>
+            
+        </section>
+        <script src="../static/votingscript.js"></script>
+    </body>
+</html>
