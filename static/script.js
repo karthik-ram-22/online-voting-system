@@ -35,7 +35,7 @@ function signin()
 response.json().then(function (data)
 {
 if(data.message=="True")
-window.alert("you are logined")
+window.location.href = "/election";
 else
 window.alert("wrong password or username or aadhar number")
 })
