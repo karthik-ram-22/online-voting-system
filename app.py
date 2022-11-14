@@ -5,12 +5,20 @@ import base64
 from PIL import Image
 import io
 import numpy as np
-import face
+from base64 import encode
+from email.mime import base
+import cv2
+import face_recognition
+import sys
+import base64
+from PIL import Image
+import io
+import numpy as np
 
 app = Flask(__name__)
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'pass123'
+app.config['MYSQL_PASSWORD'] = ''
 app.config['MYSQL_DB'] = 'voting'
 
 
@@ -115,10 +123,43 @@ def check2():
         usersDetails = cur.fetchall()
         for user in usersDetails:
             img2 = user[0]             #this is the fetched base64 which is done during registration
-        analyze_user(img1, img2)
-        return make_response(jsonify({"message": "received"}), 200)
+        if(analyze_user(img1, img2)):
+            return make_response(jsonify({"message": "ok"}), 200)
+        else:
+            return make_response(jsonify({"message": "Face not found"}), 401)
 
 
+def base64toImage(base64_string):
+    # import ipdb
+    # ipdb.set_trace()
+    base64_string = base64_string[22:]
+
+    imgdata = base64.urlsafe_b64decode((str(base64_string)+"======="))
+    img = Image.open(io.BytesIO(imgdata))
+    return cv2.cvtColor(np.array(img), cv2.COLOR_BGR2RGB)
+
+def analyze_user(base64_string, face2):
+    
+    baseimg = base64toImage(base64_string)
+    # import ipdb
+    # ipdb.set_trace()
+
+    if(len(face_recognition.face_locations(baseimg)) > 0):
+        myface = face_recognition.face_locations(baseimg)[0]
+    else:
+        return False
+    encodemyface = face_recognition.face_encodings(baseimg)[0]
+    sampleimg = base64toImage(face2)
+    try:
+        samplefacetest = face_recognition.face_locations(sampleimg)[0]
+        encodesamplefacetest = face_recognition.face_encodings(sampleimg)[0]
+    except IndexError as e:
+        return False
+
+    result = face_recognition.compare_faces([encodemyface], encodesamplefacetest)
+    resultstring = str(result)
+    # print(resultstring)
+    return result[0]
 
 
 if __name__ == "__main__":

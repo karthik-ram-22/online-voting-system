@@ -1,29 +1,47 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Webcam Authentication</title>
-        <link rel="stylesheet" href="style.css" type="text/css">
-        <style>
-            body{
-                color: white;
-	            width:100%;
-	            height:100vh;
-	            width:100vw;
-	            background-image: linear-gradient(rgba(0,0,0,0.75),rgba(0,0,0,0.75)),
-	            url("https://t4.ftcdn.net/jpg/04/18/24/15/360_F_418241563_tjvYcmLJvyG0v4kd3APD1jQQr3CLa46J.jpg");
-	            background-size:cover;	
-	            background-position:center;
-            }
-        </style>
-    </head>
-    <body>
-        <br><br>
-        <center>
-            <!-- Stream vidio via webcam-->
-            <div class="video-wrap">
-                <video id="video" playsinline autoplay></video>
-            </div><br><br>
-        
+
+<head>
+    <title>Webcam Authentication</title>
+    <link rel="stylesheet" href="style.css" type="text/css">
+    <style>
+        body {
+            color: white;
+            width: 100%;
+            height: 100vh;
+            width: 100vw;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)),
+                url("https://t4.ftcdn.net/jpg/04/18/24/15/360_F_418241563_tjvYcmLJvyG0v4kd3APD1jQQr3CLa46J.jpg");
+            background-size: cover;
+            background-position: center;
+        }
+
+        #snap {
+            width: 400px;
+            height: 50px;
+            padding: 15px 0;
+            text-align: center;
+            margin: 20px 10px;
+            border-radius: 25px;
+            font-weight: bold;
+            border: 2px solid #009688;
+            background: transparent;
+            color: #fff;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body>
+    <br><br>
+    <center>
+        <!-- Stream vidio via webcam-->
+        <div class="video-wrap">
+            <video id="video" playsinline autoplay></video>
+        </div><br><br>
+
         <!-- Trigger canvas web API-->
         <div class="controller">
             <button id="snap">Capture</button>
@@ -31,71 +49,69 @@
 
         <!--Webcam video snapshot-->
         <canvas id="canvas" width="400" height="300"></canvas>
-        </center>
-        <script>
-            'use strict';
+    </center>
+    <script>
+        'use strict';
 
-            const video = document.getElementById('video');
-            const canvas = document.getElementById('canvas');
-            const snap = document.getElementById('snap');
-            const errorMsgElement = document.getElementById('spanErrorMsg');
-            
-            const constraints = {
-                audio: true,
-                video:{
-                    width: 360, height:360
-                }
-            };
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const snap = document.getElementById('snap');
+        const errorMsgElement = document.getElementById('spanErrorMsg');
 
-            //Access webcam
-            async function init(){
-                try{
-                    const stream = await navigator.mediaDevices.getUserMedia(constraints);
-                    handleSuccess(stream);
-                }
-                catch(e){
-                    errorMsgElement.innerHTML = 'navigator.getUserMedia.error:${e.toString()}';
-                }
+        const constraints = {
+            audio: true,
+            video: {
+                width: 360, height: 360
             }
+        };
 
-            //Success
-            function handleSuccess(stream){
-                window.stream = stream;
-                video.srcObject = stream;
+        //Access webcam
+        async function init() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia(constraints);
+                handleSuccess(stream);
             }
+            catch (e) {
+                errorMsgElement.innerHTML = 'navigator.getUserMedia.error:${e.toString()}';
+            }
+        }
 
-            //load init
-            init();
-            //Draw image
-            var context = canvas.getContext('2d');
-            snap.addEventListener("click",function(){
-                context.drawImage(video, 0, 0, 480, 360);
-                var img=canvas.toDataURL();
-                var entry={image:img};
-                fetch('/authenticate/check',  //sending base64 to flask
-   {
-   method: "POST",
-   credentials:"include",
-   body:JSON.stringify(entry),
-   cache:"no-cache",
-   headers:new Headers({"content-type":"application/json"})
-   })
-   .then(function(response)
-   {
-   if(response.status!==200)
-   {
-   console.log("error")
-   return
-   }
-response.json().then(function (data)
-{
+        //Success
+        function handleSuccess(stream) {
+            window.stream = stream;
+            video.srcObject = stream;
+        }
 
-window.location.href = "/votingpage";
-})
-   })
-            });
+        //load init
+        init();
+        //Draw image
+        var context = canvas.getContext('2d');
+        snap.addEventListener("click", function () {
+            context.drawImage(video, 0, 0, 480, 360);
+            var img = canvas.toDataURL();
+            var entry = { image: img };
+            fetch('/authenticate/check',  //sending base64 to flask
+                {
+                    method: "POST",
+                    credentials: "include",
+                    body: JSON.stringify(entry),
+                    cache: "no-cache",
+                    headers: new Headers({ "content-type": "application/json" })
+                })
+                .then(function (response) {
+                    if (response.status !== 200) {
+                        alert("Face not recognized, please try again!")
+                        console.log("error")
+                        return
+                    }
+                    response.json().then(function (data) {
 
-        </script>
-    </body>
-    
+                        window.location.href = "/votingpage";
+                    })
+                })
+        });
+
+    </script>
+</body>
+
 </html>
